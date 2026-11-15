@@ -1,0 +1,83 @@
+ProductName:		macOS
+ProductVersion:		15.3.1
+BuildVersion:		24D70
+arm64
+Apple clang version 17.0.0 (clang-1700.0.13.5)
+Target: arm64-apple-darwin24.3.0
+Thread model: posix
+InstalledDir: /Library/Developer/CommandLineTools/usr/bin
+GNU Make 3.81
+Copyright (C) 2006  Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+This program built for i386-apple-darwin11.3.0
+git version 2.39.5 (Apple Git-154)
+Memory-check command exit status: 0
+gcc -std=c11 -Wall -Wextra -Wpedantic -fsanitize=address,undefined main.c musicdb.c -o musicdb_report
+./musicdb_report data 2485 > report.txt
+base: expected=0 actual=0
+missing: expected=1 actual=1
+unequal: expected=1 actual=1
+empty-title: expected=1 actual=1
+empty-artist: expected=1 actual=1
+bad-year: expected=1 actual=1
+low-year: expected=1 actual=1
+high-year: expected=1 actual=1
+fractional-year: expected=1 actual=1
+minimum-year: expected=0 actual=0
+maximum-year: expected=0 actual=0
+bad-rating: expected=1 actual=1
+infinite-rating: expected=1 actual=1
+empty-rating: expected=1 actual=1
+low-rating: expected=1 actual=1
+high-rating: expected=1 actual=1
+minimum-rating: expected=0 actual=0
+maximum-rating: expected=0 actual=0
+negative-raters: expected=1 actual=1
+fractional-raters: expected=1 actual=1
+empty-raters: expected=1 actual=1
+zero-raters: expected=0 actual=0
+overflowing-raters: expected=1 actual=1
+crlf: expected=0 actual=0
+no-newline: expected=0 actual=0
+long-title: expected=0 actual=0
+shared-artist: expected=0 actual=0
+empty-files: expected=0 actual=0
+//Since I don't have Valgrind or access to Linux environment, I reviewed following manually on top of my tests
+1. If array allocations fail, previous allocated memory is freed?
+Yes, db_create handles it properly and prevents memory leaks
+2. Are song/title allocations checked before usage?
+Yes, db_push handles it by making failed steps free the unfinished songs
+3. realloc result goes to temp (not overwritten unless it is successful)
+4. db_load frees the five buffers and closes the five files after loop (WITH validation failure)
+5.Everything (title, song, artist name, Artist, database array, database, artist pointer array) is freed once
+6. db_search makes and returns array of pointers instead of copying/freeing Song objects
+Clarifications: 
+-Used native macOS after working on Windows/Mac for hours and Valgrind and Linux environments failing.
+- Sanitizer runs fully completed with status 0
+- Input tests all matched expected results
+- The mentioned 20 000 push/sort pointer check was successfullly passed
+- Valgrind was unavailable, so I performed every test manually, which will be separately sent as a submission
+- Target 0: (musicdb_debug) stopped.
+(lldb) expression -- sizeof(long)
+(unsigned long) $0 = 8
+(lldb) expression -- sizeof(void *)
+(unsigned long) $1 = 8
+(lldb) expression -- db_song_count(db)
+(size_t) $2 = 5000
+(lldb) expression -- const Song *$saved = db_get(db, 0)
+(lldb) expression -- { for (int i = 0; i < 20000; ++i) { if (db_push(db, "Practice extra", "Practice artist", 3.0, 1985, 1) != 0) break; } }
+(lldb) expression -- db_song_count(db)
+(size_t) $3 = 25000
+(lldb) expression -- db_get(db, 0) == $saved
+(bool) $4 = true
+(lldb) expression -- db_sort(db, 2)
+(lldb) expression -- int $found = 0
+(lldb) expression -- { for (size_t i = 0; i < db_song_count(db); ++i) { if (db_get(db, i) == $saved) { $found = 1; break; } } }
+(lldb) expression -- $found
+(int) $found = 1
+(lldb) expression -- $saved->title
+(char *const) $5 = 0x0000000143604100 "White Christmas"
+(lldb) expression -- db_destroy(db)

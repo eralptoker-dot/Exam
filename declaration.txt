@@ -1,0 +1,7 @@
+I declare that this submission is entirely my own work. I did not use any
+generative-AI tool, and I did not receive help from any other person while
+producing it. I did not share the exam paper, the data files, or any part of my
+work with anyone. I understand that I may be asked to explain and modify my code
+in a viva, and that points may be withheld or reduced if I cannot.
+ 
+Name: _________Eralp Toker___________   Student ID: __120972485__________   Date: _________November 15 2026___

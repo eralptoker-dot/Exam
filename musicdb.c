@@ -1,6 +1,6 @@
 
 /* 
- * When writing code, I sometimes used my own native language (turhkish) since it was easier for me, so you can find the definitions of variable names below:
+ * When writing code, I sometimes used my own native language (turkish) for var names for ease of use (also stress under time pressure), so you can find the definitions of variable names below:
  * bul_artist  = find_artist
  * ekle_artist = add_artist
  * yol         = path (for the file path buffer)
@@ -10,6 +10,7 @@
  * max_oy      = max_raters or max_votes
  * son         = end (to make pointer boundary)
  */
+// I didn't want to mess up the code by trying to arrange var names manually afterwards (otherwise if I mess up from stress it will be very hard to fix during other debugging), so I included definitions instead
 #define _POSIX_C_SOURCE 200809L
 #include "musicdb.h"
 #include <stdio.h>
@@ -337,7 +338,7 @@ void db_sort(MusicDB *db, int card) {
     else if (card == 3) qsort(db->songs, db->n_songs, sizeof(Song *), cmp_card3);
 }
 
-// Use pointers
+/* PTR-ONLY */
 size_t db_count_decade(const MusicDB *db, int start, const Song **best) {
     if (!db) { if (best) *best = NULL; return 0; }
     size_t sayac = 0;
@@ -360,7 +361,7 @@ size_t db_count_decade(const MusicDB *db, int start, const Song **best) {
     return sayac;
 }
 
-// Again, use pointer only
+/* PTR-ONLY */
 const Artist *db_top_artist(const MusicDB *db) {
     if (!db || db->n_artists == 0) return NULL;
     const Artist *top = NULL;

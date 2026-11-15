@@ -1,0 +1,11 @@
+.DS_Store
+data/
+testdata/
+evidence/
+musicdb_report
+musicdb_debug
+answers_test
+*.o
+*.dSYM/
+*.zip
+submission_check/

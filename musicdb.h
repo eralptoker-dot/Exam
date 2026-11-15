@@ -10,6 +10,8 @@ typedef struct MusicDB MusicDB;
 /* For L=1 Layout Card (I am assuming it means UID and not USGID)
 * My UID is 120972485
 * For the member order, I want short year, char *title, unsigned int id, const Artist *artist, float rating, unsigned long num_rated
+* Actually turns out num_rated should be int. Fixing needed
+* Edit: Fixed
 */
 struct Song {
     short year;
@@ -17,7 +19,7 @@ struct Song {
     unsigned int id;
     const Artist *artist;
     float rating;
-    unsigned long num_rated;
+    unsigned int num_rated;
 };
 typedef struct Song Song;
 

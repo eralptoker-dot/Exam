@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     const Song *push2_song = db_get(db, db_song_count(db) - 1);
     size_t beatles_songs = push2_song ? push2_song->artist->n_songs : 0;
     printf("[C] beatles_songs=%zu\n", beatles_songs);
-
+// 1960 + (D*20) is wrong, I can just do 1960 + D * 10 (check before-fixes.txt for wrong output)
     int decade_start = 1960 + D * 10;
     const Song *best_dec = NULL;
     size_t dec_c = db_count_decade(db, decade_start, &best_dec);

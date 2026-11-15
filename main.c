@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     size_t beatles_songs = push2_song ? push2_song->artist->n_songs : 0;
     printf("[C] beatles_songs=%zu\n", beatles_songs);
 
-    int decade_start = 1960 + (D * 20);
+    int decade_start = 1960 + D * 10;
     const Song *best_dec = NULL;
     size_t dec_c = db_count_decade(db, decade_start, &best_dec);
     printf("[D] Q1 decade=%d count=%zu best_id=%u best_title=%s\n",
